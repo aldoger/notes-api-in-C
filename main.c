@@ -46,6 +46,30 @@ void print_notes(RequestContext *ctx) {
     write(ctx->client_fd, response, resp_len);
 }
 
+void add_notes(RequestContext *ctx) {
+    AppState *app = (AppState *)ctx->app;
+
+    char body[1024];
+    int offset = 0;
+
+    offset += snprintf(body + offset, sizeof(body) - offset, "Response:\n");
+
+    if(app->notes_count > MAX_NOTES) {
+        char response[2048];
+        int resp_len = snprintf(response, sizeof(response),
+            "HTTP/1.1 200 OK\r\n"
+            "Content-Type: text/plain\r\n"
+            "Content-Length: %d\r\n"
+            "\r\n"
+            "%s",
+            offset, body
+        );
+        offset += snprintf(body + offset, sizeof(body) - offset, "Maximum note capacity reach, cannot add more notes\n");
+        write(ctx->client_fd, response, resp_len);
+        return;       
+    }
+}
+
 
 int main() {
     static AppState app = {
