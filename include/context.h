@@ -2,15 +2,13 @@
 #define context_h
 
 #include "app_state.h"
+#include <json-c/json.h>
 
 typedef struct {
     int client_fd;
 
-    char method[8];
-    char path[256];
-
+    struct json_object *obj;
     struct AppState *app;
 } RequestContext;
-
 
 #endif

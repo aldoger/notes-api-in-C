@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include "include/app_state.h"
 #include "include/handler.h"
 #include "include/server.h"
 
@@ -69,22 +68,35 @@ void launch(struct Server *server) {
 
         buffer[bytes_read] = '\0';
 
-        printf("%s\n", buffer);  
+        char *body = strstr(buffer, "\r\n\r\n");
+        if (!body) {
+            close(client_fd);
+            continue;
+        }
+        body += 4;
+
+        struct json_object *json = NULL;
+        if (strstr(buffer, "Content-Type: application/json")) {
+            json = json_tokener_parse(body);
+        }
 
         RequestContext ctx = {0};
         ctx.client_fd = client_fd;
         ctx.app = server->app_state;
+        ctx.obj = json;
 
         char method[8];
         char path[1024];
 
         if (sscanf(buffer, "%7s %1023s", method, path) != 2) {
+            if (json) json_object_put(json);
             close(client_fd);
             continue;
         }
 
         char *q = strchr(path, '?');
         if (q) *q = '\0';
+
 
         int handled = 0;
         for (int i = 0; i < server->handler_count; i++) {
