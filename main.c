@@ -1,5 +1,5 @@
-#include <unistd.h>   
-#include <string.h>   
+#include <unistd.h>
+#include <string.h>
 #include <stdio.h>
 #include "include/server.h"
 
@@ -66,7 +66,7 @@ void add_notes(RequestContext *ctx) {
         );
         offset += snprintf(body + offset, sizeof(body) - offset, "Maximum note capacity reach, cannot add more notes\n");
         write(ctx->client_fd, response, resp_len);
-        return;       
+        return;
     }
 }
 
@@ -80,7 +80,7 @@ int main() {
         .notes_count = 2
     };
 
-    struct Server server = server_Constructor(
+    struct Server server = server_constructor(
         AF_INET, 8000, SOCK_STREAM, 0, 10, INADDR_ANY, launch, &app
     );
 
@@ -89,4 +89,3 @@ int main() {
 
     server.launch(&server);
 }
-

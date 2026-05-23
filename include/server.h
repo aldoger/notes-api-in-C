@@ -19,14 +19,14 @@ struct Server {
     struct sockaddr_in address;
 
     struct Handler handlers[MAX_HANDLERS];
-    int handler_count; 
+    int handler_count;
 
     void (*launch)(struct Server *server);
 
     void *app_state;
 };
 
-struct Server server_Constructor(int domain, int port, int service, int protocol, int backlog, __u_long interface, void (*launch)(struct Server *server), void *app_state);
+struct Server server_constructor(int domain, int port, int service, int protocol, int backlog, __u_long interface, void (*launch)(struct Server *server), void *app_state);
 void server_add_handler(struct Server *server, const char *route, void (*handler)(RequestContext *));
 void launch(struct Server *server);
 

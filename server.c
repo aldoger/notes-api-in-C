@@ -6,7 +6,7 @@
 #include "include/server.h"
 
 
-struct Server server_Constructor(int domain, int port, int service, int protocol, int backlog, __u_long interface, void (*launch)(struct Server *server), void *app_state) {
+struct Server server_constructor(int domain, int port, int service, int protocol, int backlog, __u_long interface, void (*launch)(struct Server *server), void *app_state) {
     struct Server server;
 
     memset(server.handlers, 0, sizeof(server.handlers));
